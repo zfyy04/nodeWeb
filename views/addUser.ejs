@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>添加用户页面</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>添加用户</h1>
+    用户姓名：
+    <input type="text" id="username" value="" />
+    <input type="button" value="提交" onclick="submitInfo()"/>
+    <br>
+  </body>
+  <script type="text/javascript">
+    function submitInfo(){
+      $.ajax({
+        url:"/users/addUser",
+        type:"post",
+        data:{"username":$("#username").val()},
+        success:function(data,status){
+          alert("添加成功！");
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("失败！"+xhr);
+        }
+      });
+    }
+  </script>
+</html>

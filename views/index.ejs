@@ -7,5 +7,11 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <input type="button" value="创建用户" onclick="showAddUser()" />
   </body>
+  <script type="text/javascript">
+    function showAddUser(){
+      window.location.href="/users/showAddUser";
+    }
+  </script>
 </html>

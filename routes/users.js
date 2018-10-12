@@ -1,9 +1,23 @@
 var express = require('express');
 var router = express.Router();
+var userInfoDao = require("../server/dao/userInfoDao");
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
+});
+
+//页面跳转
+router.get("/showAddUser",function(req,res){
+  res.render('addUser');
+});
+
+//ajax处理请求
+router.post("/addUser",function(req,res){
+  //如果是get请求，取值为req.query.username
+  userInfoDao.addUser({"userid":"123","username":req.body.username});
+  res.send(200,{code:'0',mes:'成功'});
+  //失败：res.send(500,{code:'-1',mes:'失败'});
 });
 
 module.exports = router;
