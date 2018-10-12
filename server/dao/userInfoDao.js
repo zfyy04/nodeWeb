@@ -80,10 +80,22 @@ function findUser(whereObj){
     })
 }
 
+function findUserById(id,res){
+    UserInfo.findById(id, function(err, res2){
+        if (err) {
+            console.log("findUserById Error:" + err);
+        }else {
+            console.log("findUserById Res:" + res2);
+            res.status(200).json(res2._doc);
+        }
+    })
+}
+
 module.exports = {
     "addUser":addUser,
     "updateUser":updateUser,
     "findByIdAndUpdateUser":findByIdAndUpdateUser,
     "removeUser":removeUser,
-    "findUser":findUser
+    "findUser":findUser,
+    "findUserById":findUserById
 }
