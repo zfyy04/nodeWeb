@@ -80,6 +80,12 @@ function findUser(whereObj){
     })
 }
 
+
+/**
+ * 根据id查询
+ * @param {自生成id} id 
+ * @param {传入的request} res 
+ */
 function findUserById(id,res){
     UserInfo.findById(id, function(err, res2){
         if (err) {
