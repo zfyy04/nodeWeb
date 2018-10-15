@@ -1,7 +1,10 @@
 //用户数据操作
 var mongoose = require("mongoose");
 var UserInfo = require("../dto/userInfo");
-
+var NeedInfo = require("../dto/needInfo");
+var GroupInfo = require("../dto/groupInfo");
+var StoryInfo = require("../dto/storyInfo");
+var Estimate = require("../dto/userEstimateInfo");
 
 /**
  * 新增用户
@@ -9,7 +12,7 @@ var UserInfo = require("../dto/userInfo");
  */
 function addUser(obj){
     var userInfo = new UserInfo({
-        userid:obj.userid,
+        umid:obj.userid,
         username:obj.username,
         created:new Date()
     });
@@ -18,6 +21,7 @@ function addUser(obj){
             console.log("addUser Error:" + err);
         }else {
             console.log("addUser Res:" + res);
+            addStory();
         }
     });
 }
@@ -95,6 +99,22 @@ function findUserById(id,res){
             res.status(200).json(res2._doc);
         }
     })
+}
+
+//测试方法
+function addStory(){
+    var storyInfo = new StoryInfo({
+            storyName: "test",     //故事名称
+            storyContent: "content11",  //故事内容
+            avgPoint: 1,  //预估平均点数
+            needId:mongoose.Types.ObjectId('576cd26698785e4913c5d0e2')//需求id
+    });
+
+    storyInfo.save(function(err,result){
+        if(!err){
+            console.log("add story success");
+        }
+    });
 }
 
 module.exports = {
