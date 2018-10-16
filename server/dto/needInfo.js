@@ -11,4 +11,4 @@ var needSchema = new mongoose.Schema({
     //storys:[mongoose.Schema.Types.ObjectId]
 });
 
-module.exports = mongoose.model('needinfo', needSchema);
+module.exports = mongoose.model('needInfo', needSchema,"need_info");

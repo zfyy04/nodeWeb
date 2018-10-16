@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+  </head>
+  <body>
+    <div id="userApp">
+      <h1>添加用户</h1>
+      umid：
+      <input type="text" id="umid" value="" /><br/>
+      用户姓名：
+      <input type="text" id="username" value="" />
+      <br/>
+      用户分组：
+      <select id="groupInfo">
+          <option v-for="group in groups" v-bind:value="group._id">
+            {{group.groupName}}
+          </option>
+      </select><br/>
+      <input type="button" value="提交" onclick="submitInfo()"/>
+      <br/><br/>
+      用户id：
+      <input type="text" id="userid" value="" />
+      <br/>
+      <input type="button" value="查找" onclick="find()"/>
+      <span id="showUserSpan"></span>
+      <br>
+    </div>
+  </body>
+  <script type="text/javascript">
+    function init(){
+      $.ajax({
+        url:"/users/getAllGroups",
+        type:"get",
+        success:function(ret,status){
+          new Vue({
+            el: '#userApp',
+            data: {
+              groups:ret
+            }
+          })
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("初始化失败"+xhr);
+        }
+      });
+    }
+    init();
+    function submitInfo(){
+      $.ajax({
+        url:"/users/addUser",
+        type:"post",
+        data:{"umid":$("#umid").val(),"username":$("#username").val(),"groupId":$("#groupInfo").val()},
+        success:function(data,status){
+          alert("添加成功！");
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("失败！"+xhr);
+        }
+      });
+    }
+
+    function find(){
+      $.ajax({
+        url:"/users/findUserById",
+        type:"get",
+        data:{"userid":$("#userid").val()},
+        success:function(data,status){
+          alert("查询成功！"+data);
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("失败！"+xhr);
+        }
+      });
+    }
+  </script>
+</html>

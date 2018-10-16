@@ -12,4 +12,4 @@ var estimateSchema = new mongoose.Schema({
     }]
 });
 
-module.exports = mongoose.model('esimateInfo', estimateSchema);
+module.exports = mongoose.model('esimateInfo', estimateSchema,"estimate_info");

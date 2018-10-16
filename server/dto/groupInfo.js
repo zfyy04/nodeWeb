@@ -5,4 +5,4 @@ var groupSchema = new mongoose.Schema({
     creatDate:Date
 });
 
-module.exports = mongoose.model('groupinfo', groupSchema);
+module.exports = mongoose.model('groupInfo', groupSchema,"group_info");

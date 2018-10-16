@@ -8,4 +8,4 @@ var storySchema = new mongoose.Schema({
     needId:mongoose.Schema.Types.ObjectId//需求id
 });
 
-module.exports = mongoose.model('storyinfo', storySchema);
+module.exports = mongoose.model('storyInfo', storySchema,"story_info");

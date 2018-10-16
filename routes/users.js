@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 
 //页面跳转
 router.get("/showAddUser",function(req,res){
-  res.render('addUser');
+  res.render('addUser',{"title":"test"});
 });
 
 //根据id查找用户
@@ -22,9 +22,14 @@ router.get("/findUserById",function(req,res){
 });
 
 //ajax处理请求
+router.get("/getAllGroups",function(req,res){
+  userInfoDao.findGroups(res);
+});
+
+//ajax处理请求
 router.post("/addUser",function(req,res){
   //如果是get请求，取值为req.query.username
-  userInfoDao.addUser({"userid":"123","username":req.body.username});
+  userInfoDao.addUser({"umid":req.body.umid,"username":req.body.username,"groupId":req.body.groupId});
   res.send(200,{code:'0',mes:'成功'});
   //失败：res.send(500,{code:'-1',mes:'失败'});
 });

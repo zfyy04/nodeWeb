@@ -12,16 +12,17 @@ var Estimate = require("../dto/userEstimateInfo");
  */
 function addUser(obj){
     var userInfo = new UserInfo({
-        umid:obj.userid,
+        umid:obj.umid,
         username:obj.username,
+        groupId:mongoose.Types.ObjectId(obj.groupId),
         created:new Date()
     });
     userInfo.save(function(err,res){
         if (err) {
             console.log("addUser Error:" + err);
         }else {
-            console.log("addUser Res:" + res);
-            addStory();
+            console.log("addUser Res : userId="+ userInfo._id +" =>"+ res);
+            //addStory();
         }
     });
 }
@@ -91,14 +92,20 @@ function findUser(whereObj){
  * @param {传入的request} res 
  */
 function findUserById(id,res){
-    UserInfo.findById(id, function(err, res2){
-        if (err) {
-            console.log("findUserById Error:" + err);
-        }else {
-            console.log("findUserById Res:" + res2);
-            res.status(200).json(res2._doc);
+    UserInfo.findById(id).populate("groupId").exec(function(err,result){
+        if(!err){
+            console.log(result);
+            res.status(200).json(result._doc);
         }
-    })
+    });
+    // UserInfo.findById(id, function(err, res2){
+    //     if (err) {
+    //         console.log("findUserById Error:" + err);
+    //     }else {
+    //         console.log("findUserById Res:" + res2);
+    //         res.status(200).json(res2._doc);
+    //     }
+    // })
 }
 
 //测试方法
@@ -117,11 +124,26 @@ function addStory(){
     });
 }
 
+/**
+ * 查询所有组别
+ * @param {response} resp 
+ */
+function findGroups(resp){
+    GroupInfo.find({},function(err,result){
+        if(!err){
+            resp.status(200).json(result);
+        }else{
+            resp.status(500).json(err);
+        }
+    });
+}
+
 module.exports = {
     "addUser":addUser,
     "updateUser":updateUser,
     "findByIdAndUpdateUser":findByIdAndUpdateUser,
     "removeUser":removeUser,
     "findUser":findUser,
-    "findUserById":findUserById
+    "findUserById":findUserById,
+    "findGroups":findGroups
 }
