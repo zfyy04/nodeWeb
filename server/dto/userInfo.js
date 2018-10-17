@@ -3,7 +3,7 @@ var mongoose = require("../util/dbFactory");
 var userSchema = new mongoose.Schema({
     umid:String,
     username:String,
-    groupId:{
+    groupInfo:{
         type:mongoose.Schema.Types.ObjectId,//组织id
         ref:"groupInfo"
     },
