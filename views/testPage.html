@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+  </head>
+  <body>
+    <div id="userApp">
+      <h1>添加故事</h1>
+      文档名称
+      <input type="text" id="fileName" value="" /><br/>
+      迭代
+      <input type="text" id="sprint" value="" /><br/>
+      故事标题：
+      <input type="text" name="storyName" value="" />&nbsp;
+      故事内容：
+      <input type="text" name="storyContent" value="" />
+      <br/>
+      故事标题：
+      <input type="text" name="storyName" value="" />&nbsp;
+      故事内容：
+      <input type="text" name="storyContent" value="" />
+      <br/>
+      故事标题：
+      <input type="text" name="storyName" value="" />&nbsp;
+      故事内容：
+      <input type="text" name="storyContent" value="" />
+      <br/>
+      <input type="button" value="添加故事" onclick="addStorys()"/>
+      <br>
+      <h1>查询故事</h1>
+      文档名称
+      <input type="text" id="findFileName" value="" /><br/>
+      <input type="button" value="查找故事" onclick="find()"/>
+      <legend>故事评估</legend>
+      <div id="estimateDiv">
+      </div>
+      <input type="button" value="评估" onclick="estimate()"/>
+    </div>
+  </body>
+  <script type="text/javascript">
+    function addStorys(){
+      var storyName = [];
+      $("input[name='storyName']").each(function(index){
+        storyName.push($(this).val());
+      });
+      var storyContent = [];
+      $("input[name='storyContent']").each(function(index){
+        storyContent.push($(this).val());
+      });
+
+      $.ajax({
+        url:"/common/addStorys",
+        type:"post",
+        data:{"fileName":$("#fileName").val(),"sprint":$("sprint").val(),"storyName":JSON.stringify(storyName),"storyContent":JSON.stringify(storyContent)},
+        success:function(data,status){
+          alert("添加成功！");
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("失败！"+xhr);
+        }
+      });
+    }
+
+    function find(){
+      $.ajax({
+        url:"/common/getStorys",
+        type:"get",
+        data:{"fileName":$("#findFileName").val()},
+        success:function(data,status){
+          alert("查询成功！"+JSON.stringify(data.ret));
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("失败！"+xhr);
+        }
+      });
+    }
+  </script>
+</html>
