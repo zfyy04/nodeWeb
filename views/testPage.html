@@ -34,9 +34,16 @@
       文档名称
       <input type="text" id="findFileName" value="" /><br/>
       <input type="button" value="查找故事" onclick="find()"/>
-      <legend>故事评估</legend>
-      <div id="estimateDiv">
-      </div>
+      <br/>
+      <h2>故事评估</h2>
+      <table id="estimateDiv">
+        <tr>
+          <td>story序号</td>
+          <td>story名称</td>
+          <td>story内容</td>
+          <td>操作</td>
+        </tr>
+      </table>
       <input type="button" value="评估" onclick="estimate()"/>
     </div>
   </body>
@@ -70,10 +77,50 @@
         type:"get",
         data:{"fileName":$("#findFileName").val()},
         success:function(data,status){
-          alert("查询成功！"+JSON.stringify(data.ret));
+          var retList = data.ret;
+          var htmlStr = "";
+          for(var i=0;i<retList.length;i++){
+            var retObj = retList[i];
+            htmlStr += "<tr>"+
+                "<td>"+retObj.storySeq+"</td>"+
+                "<td>"+retObj.storyName+"</td>"+
+                "<td>"+retObj.storyContent+"</td>"+
+                "<td><select id='pointSel_"+i+"'>"+
+                    "<option value='1'>1</option>" + 
+                    "<option value='2'>2</option>" + 
+                    "<option value='3'>3</option>" + 
+                  "</select>&nbsp;"+
+                  "<input type='hidden' value='"+retObj._id+"' id='sid_"+i+"'>" +
+                  "<input type='hidden' value='"+retObj.fileName+"' id='fname_"+i+"'>" +
+                  "<input type='button' value='确认评估' onclick='submitPoint(\""+i+"\")'/>"+
+                  "</td>"+
+                "</tr>";
+          }
+          $("#estimateDiv").append(htmlStr);
         },
         error:function(xhr, textStatus, errorThrown){
           alert("失败！"+xhr);
+        }
+      });
+    }
+
+    function submitPoint(i){
+      var sid = $("#sid_"+i).val();
+      var selVal = $("#pointSel_"+i).val();
+      var fname = $("#fname_"+i).val();
+      var umid = "zfy";
+      var username = "张学友";
+      var remark = "暂无备注";
+
+       $.ajax({
+        url:"/common/pointStory",
+        type:"post",
+        data:{"sid":sid,"selVal":selVal,"fname":fname,"umid":umid,"username":username,"remark":remark},
+        success:function(data,status){
+          alert("评估成功！");
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("评估失败！"+xhr);
         }
       });
     }

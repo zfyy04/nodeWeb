@@ -67,4 +67,29 @@ router.post("/addStorys",function(req,res){
   });
 });
 
+//点数评估
+router.post("/pointStory",function(req,res){
+  var sid = req.body.sid;
+  var selVal = req.body.selVal;
+  var fname = req.body.fname;
+  var uid = req.body.umid;
+  var uname = req.body.username;
+  var remark = req.body.remark;
+  //先删除嵌套的评估内容，再插入
+  var whereObj = {"umid":uid,"username":uname,"fileName":fname};
+  var deleteObj = {$pull:{"storys":{"storyInfo":mongoose.Types.ObjectId(sid)}}};
+  var insertObj = {$push:{"storys":{"storyInfo":mongoose.Types.ObjectId(sid),"point":selVal,"remark":remark}}};
+  var options = {upsert:true};//如果查询条件不存在，则插入一条
+  Estimates.update(whereObj,deleteObj,options,
+      function(err,ret){
+        if(!err){
+          Estimates.update(whereObj,insertObj,options,function(err1,ret1){
+            if(!err1){
+              res.send(200,{code:'0',mes:'成功'});
+            }
+          });
+        }
+      });
+});
+
 module.exports = router;
