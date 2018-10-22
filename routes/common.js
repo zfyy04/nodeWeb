@@ -92,4 +92,17 @@ router.post("/pointStory",function(req,res){
       });
 });
 
+
+//点数评估
+router.get("/getStoryPoint",function(req,res){
+  var fname = "故事1";
+  var uid = "zfy";
+  Estimates.find({"umid":uid,"fileName":fname}).populate("storys.storyInfo").exec(function(err,ret){
+    if(!err){
+      console.log(ret);
+      console.log(ret[0].storys[0].storyInfo.storyName);
+    }
+  });
+});
+
 module.exports = router;
