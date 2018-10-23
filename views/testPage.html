@@ -13,6 +13,12 @@
       <input type="text" id="fileName" value="" /><br/>
       迭代
       <input type="text" id="sprint" value="" /><br/>
+      用户分组：
+      <select id="groupId">
+          <option v-for="group in groups" v-bind:value="group._id">
+            {{group.groupName}}
+          </option>
+      </select><br/>
       故事标题：
       <input type="text" name="storyName" value="" />&nbsp;
       故事内容：
@@ -35,7 +41,11 @@
       <input type="text" id="findFileName" value="" /><br/>
       <input type="button" value="查找故事" onclick="find()"/>
       <br/>
-      <h2>故事评估</h2>
+      <h1>故事评估</h1>
+      <br/>
+      评估用户：
+      <select id="euid">
+      </select><br/>
       <table id="estimateDiv">
         <tr>
           <td>story序号</td>
@@ -44,10 +54,54 @@
           <td>操作</td>
         </tr>
       </table>
-      <input type="button" value="评估" onclick="estimate()"/>
+      <h1>根据条件查询评估内容</h1>
+      查询用户:
+      <select id="find_uid">
+          <option value="">--请选择--</option>
+      </select><br/>
+      <br/>
+      需求名称:<input type="text" id="find_needName"/>
+      <br/>
+      <input type="button" value="查询" onclick="findEstimate()">
+      <span id="search_res">
+        
+      </span>
+      
     </div>
   </body>
   <script type="text/javascript">
+  function init(){
+      $.ajax({
+        url:"/users/getAllGroups",
+        type:"get",
+        success:function(ret,status){
+          new Vue({
+            el: '#userApp',
+            data: {
+              groups:ret
+            }
+          })
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("初始化失败"+xhr);
+        }
+      });
+
+      $.ajax({
+        url:"/users/getAllUsers",
+        type:"get",
+        success:function(ret,status){
+          for(var i=0;i<ret.length;i++){
+            $("#euid").append("<option value='"+ret[i]._id+"'>"+ret[i].username+"</option>");
+            $("#find_uid").append("<option value='"+ret[i]._id+"'>"+ret[i].username+"</option>");
+          }
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("初始化失败"+xhr);
+        }
+      });
+    }
+    init();
     function addStorys(){
       var storyName = [];
       $("input[name='storyName']").each(function(index){
@@ -61,7 +115,7 @@
       $.ajax({
         url:"/common/addStorys",
         type:"post",
-        data:{"fileName":$("#fileName").val(),"sprint":$("sprint").val(),"storyName":JSON.stringify(storyName),"storyContent":JSON.stringify(storyContent)},
+        data:{"fileName":$("#fileName").val(),"sprint":$("sprint").val(),"groupId":$("#groupId").val(),"storyName":JSON.stringify(storyName),"storyContent":JSON.stringify(storyContent)},
         success:function(data,status){
           alert("添加成功！");
         },
@@ -108,19 +162,32 @@
       var sid = $("#sid_"+i).val();
       var selVal = $("#pointSel_"+i).val();
       var fname = $("#fname_"+i).val();
-      var umid = "zfy";
-      var username = "张学友";
+      var uid = $("#euid").val();
       var remark = "暂无备注";
 
        $.ajax({
         url:"/common/pointStory",
         type:"post",
-        data:{"sid":sid,"selVal":selVal,"fname":fname,"umid":umid,"username":username,"remark":remark},
+        data:{"sid":sid,"selVal":selVal,"fname":fname,"uid":uid,"remark":remark},
         success:function(data,status){
           alert("评估成功！");
         },
         error:function(xhr, textStatus, errorThrown){
           alert("评估失败！"+xhr);
+        }
+      });
+    }
+
+    function findEstimate(){
+      $.ajax({
+        url:"/common/findEstimate",
+        type:"get",
+        data:{"uid":$("#find_uid").val(),"fileName":$("#find_needName").val()},
+        success:function(data,status){
+          $("#search_res").html(JSON.stringify(data.ret));
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("查询失败！"+xhr);
         }
       });
     }

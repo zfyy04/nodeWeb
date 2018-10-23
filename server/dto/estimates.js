@@ -2,8 +2,10 @@
 var mongoose = require("../util/dbFactory");
 
 var estimate = new mongoose.Schema({
-    umid:String,//评估用户id
-    username:String,//评估用户姓名
+    userInfo: {
+        type:mongoose.Schema.Types.ObjectId,//用户
+        ref:"userInfo"
+    },
     fileName:String,//评估文档
     storys:[{
         storyInfo:{

@@ -1,7 +1,8 @@
 //定义数据模板
 var mongoose = require("../util/dbFactory");
 var groupSchema = new mongoose.Schema({
-    groupName:String,//机构名称
+    groupName:String,//分组名称
+    groupCode:String,//分组编码
     creatDate:Date
 });
 

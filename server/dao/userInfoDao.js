@@ -95,7 +95,7 @@ function findUserById(id,res){
     UserInfo.findById(id).populate("groupInfo").exec(function(err,result){
         if(!err){
             console.log(result);
-            findTest();
+            //findTest();
             res.status(200).json(result._doc);
         }
     });
@@ -236,6 +236,20 @@ function findGroups(resp){
     });
 }
 
+/**
+ * 查询所有用户
+ * @param {response} resp 
+ */
+function findAllUsers(resp){
+    UserInfo.find({},function(err,result){
+        if(!err){
+            resp.status(200).json(result);
+        }else{
+            resp.status(500).json(err);
+        }
+    });
+}
+
 module.exports = {
     "addUser":addUser,
     "updateUser":updateUser,
@@ -243,5 +257,6 @@ module.exports = {
     "removeUser":removeUser,
     "findUser":findUser,
     "findUserById":findUserById,
-    "findGroups":findGroups
+    "findGroups":findGroups,
+    "findAllUsers":findAllUsers,
 }

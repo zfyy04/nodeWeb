@@ -6,8 +6,11 @@ var story = new mongoose.Schema({
     storyContent: String,  //故事内容
     storySeq:Number,        //故事序号
     storySprint: Number,  //所属迭代
-    belongTeam:String,//所属组别
     fileName:String,//上传文档名称
+    groupInfo:{
+        type:mongoose.Schema.Types.ObjectId,//组织id
+        ref:"groupInfo"
+    },
     createDate:Date,//创建时间
     uploadder:String//创建人
 });

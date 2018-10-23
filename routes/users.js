@@ -27,6 +27,11 @@ router.get("/getAllGroups",function(req,res){
 });
 
 //ajax处理请求
+router.get("/getAllUsers",function(req,res){
+  userInfoDao.findAllUsers(res);
+});
+
+//ajax处理请求
 router.post("/addUser",function(req,res){
   //如果是get请求，取值为req.query.username
   userInfoDao.addUser({"umid":req.body.umid,"username":req.body.username,"groupId":req.body.groupId});

@@ -26,6 +26,7 @@
       <input type="text" id="userid" value="" />
       <br/>
       <input type="button" value="查找" onclick="find()"/>
+      <br/>
       <span id="showUserSpan"></span>
       <br>
     </div>
@@ -69,7 +70,8 @@
         type:"get",
         data:{"userid":$("#userid").val()},
         success:function(data,status){
-          alert("查询成功！"+data);
+          $("#showUserSpan").html(JSON.stringify(data));
+          //alert("查询成功！"+data);
         },
         error:function(xhr, textStatus, errorThrown){
           alert("失败！"+xhr);
