@@ -100,10 +100,12 @@ router.post("/pointStory",function(req,res){
   var fname = req.body.fname;
   var uid = req.body.uid;
   var remark = req.body.remark;
+  //方式1：
   //先删除嵌套的评估内容，再插入
+  /*
   var whereObj = {"userInfo":mongoose.Types.ObjectId(uid),"fileName":fname};
   var deleteObj = {$pull:{"storys":{"storyInfo":mongoose.Types.ObjectId(sid)}}};
-  var insertObj = {$push:{"storys":{"storyInfo":mongoose.Types.ObjectId(sid),"point":selVal,"remark":remark}}};
+  var insertObj = {$push:{"storys":{"storyInfo":mongoose.Types.ObjectId(sid),"point":selVal,"remark":remark,"estimateDate":new Date()}}};
   var options = {upsert:true};//如果查询条件不存在，则插入一条
   Estimates.update(whereObj,deleteObj,options,
       function(err,ret){
@@ -115,6 +117,30 @@ router.post("/pointStory",function(req,res){
           });
         }
       });
+  */
+  //方式2：使用bulkWrite
+  var dd = new Date();
+  var docs = [];
+  var upToDel = {
+    updateOne:{
+      filter:{"userInfo":mongoose.Types.ObjectId(uid),"fileName":fname},
+      update:{$pull:{"storys":{"storyInfo":mongoose.Types.ObjectId(sid)}}},
+      upsert:true
+    }
+  };
+  var upToAdd = {
+    updateOne:{
+      filter:{"userInfo":mongoose.Types.ObjectId(uid),"fileName":fname},
+      update:{$push:{"storys":{"storyInfo":mongoose.Types.ObjectId(sid),"point":selVal,"remark":remark,"estimateDate":new Date("2018-10-25T22:45:00Z")}}},
+      upsert:true
+    }
+  };
+  docs.push(upToDel,upToAdd);
+  Estimates.bulkWrite(docs,function(err,ret1){
+    if(!err){
+      res.send(200,{code:'0',mes:'评估成功'});
+    }
+  });
 });
 
 module.exports = router;

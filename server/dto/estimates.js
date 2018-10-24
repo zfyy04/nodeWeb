@@ -13,7 +13,8 @@ var estimate = new mongoose.Schema({
             ref:"story"
         },
         point:Number,//评估点数
-        remark:String//备注
+        remark:String,//备注
+        estimateDate:Date //评估时间
     }]
 });
 
