@@ -26,6 +26,7 @@
       <input type="text" id="userid" value="" />
       <br/>
       <input type="button" value="查找" onclick="find()"/>
+      <input type="button" value="test" onclick="testRest()"/>
       <br/>
       <span id="showUserSpan"></span>
       <br>
@@ -72,6 +73,22 @@
         success:function(data,status){
           $("#showUserSpan").html(JSON.stringify(data));
           //alert("查询成功！"+data);
+        },
+        error:function(xhr, textStatus, errorThrown){
+          alert("失败！"+xhr);
+        }
+      });
+    }
+
+    function testRest(){
+      $.ajax({
+        url:"http://localhost:8081/user/testJsonP?name=zfy&age=30",
+        type:"get",
+        data:{},
+        dataType:"jsonp",  //数据格式设置为jsonp
+        jsonp:"callback",  //Jquery生成验证参数的名称
+        success:function(data,status){
+          alert(data);
         },
         error:function(xhr, textStatus, errorThrown){
           alert("失败！"+xhr);
